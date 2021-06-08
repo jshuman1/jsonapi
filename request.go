@@ -629,7 +629,11 @@ func handleStruct(
 	}
 
 	if err := unmarshalNode(node, model, nil); err != nil {
-		return reflect.Value{}, err
+		innerErr := json.Unmarshal(data, model.Interface())
+		if innerErr != nil {
+			return model, innerErr
+		}
+		return model, nil
 	}
 
 	return model, nil
